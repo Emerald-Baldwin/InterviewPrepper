@@ -1,0 +1,103 @@
+<ScrollView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+<RelativeLayout 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".SettingsActivity" >
+
+    <TextView
+        android:id="@+id/tens_minute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Interview Length: " 
+        android:layout_gravity="center_vertical"/>
+    
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tens_minute"
+        android:layout_alignBottom="@+id/tens_minute"
+        android:layout_centerHorizontal="true"
+        android:hint="30"
+        android:inputType="number" >
+
+        <requestFocus />
+    </EditText>
+    
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/tens_minute"
+        android:id="@+id/dividerBar1"
+        android:background="#000000"/>
+    
+    <TextView
+        android:id="@+id/customQuestions"
+        android:layout_below="@id/tens_minute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Custom Questions" 
+        android:layout_gravity="center_vertical"/>
+    
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/customQuestionsAddQuestionLayout"
+        android:layout_below="@id/customQuestions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    
+    <EditText 
+        android:id="@+id/addCustomQuestionEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Add a custom question"
+        android:layout_gravity="center_vertical"/>
+    
+    <Button
+        android:id="@+id/addQuestionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"/>
+    
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:orientation="vertical"
+        android:id="@+id/customQuestionsList"
+        android:layout_below="@id/customQuestionsAddQuestionLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/customQuestionsList"
+        android:id="@+id/dividerBar2"
+        android:background="#000000"/>
+     
+     <TextView
+        android:id="@+id/defaultQuestions"
+        android:layout_below="@id/customQuestionsList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Default Questions" 
+        android:layout_gravity="center_vertical"/>
+     
+     <LinearLayout 
+        android:orientation="vertical"
+        android:id="@+id/defaultQuestionsList"
+        android:layout_below="@id/defaultQuestions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>
+</ScrollView>

@@ -28,6 +28,15 @@ public class MainMenuActivity extends Activity {
 		
 		// todo implement settings button after settings view is created
 		Button settingsButton = (Button) findViewById(R.id.settings);
+		settingsButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(MainMenuActivity.this, SettingsActivity.class);
+				startActivity(i);
+			}
+			
+		});
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package com.example.interviewprepper;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -11,85 +11,62 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Chronometer;
-import android.widget.Chronometer.OnChronometerTickListener;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
-	ArrayList<String> questions;
-	int currentIndex;
-	Random randomNumberGenerator;
-	TextView textblock;
-	Chronometer clock;
+public class SettingsActivity extends Activity {
+
 	SharedPreferences sharedPref;
-	int tensMinute;
-	int onesMinute;
+	SharedPreferences.Editor editor;
+	ArrayList<String> questions;
+	LinearLayout defaultQuestionsList;
+	Button questionButton;
+	HashMap<Button, Integer> buttonsMap;
+	HashMap<Button, LinearLayout> buttonToLayoutMap;
 	
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        
-        createListOfQuestions();
-        
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        tensMinute = sharedPref.getInt("tens_minute", 0);
-        onesMinute = sharedPref.getInt("ones_minute", 0);
-        
-        randomNumberGenerator = new Random();
-        currentIndex = randomNumberGenerator.nextInt(questions.size());
-        textblock = (TextView) findViewById(R.id.question);
-        textblock.setText(questions.get(currentIndex));
-        
-        clock = (Chronometer) findViewById(R.id.timer);
-        clock.start();
-        
-        System.out.println(clock.toString());
-        
-        Button completedButton = (Button) findViewById(R.id.completed);
-        completedButton.setOnClickListener(new OnClickListener() {
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_settings);
+		
+		sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		editor = sharedPref.edit();
+		
+	    createListOfQuestions();
+	    
+	    defaultQuestionsList = (LinearLayout) findViewById(R.id.defaultQuestionsList);
+	    
+	    showListOfQuestions();
+	}
 
-			@Override
-			public void onClick(View v) {
-				if (questions.size() > 0) {
-					questions.remove(currentIndex); 
-					
-					if (questions.size() != 0) {
-						currentIndex = randomNumberGenerator.nextInt(questions.size());
-						textblock.setText(questions.get(currentIndex));
-					} else {
-						textblock.setText("No more questions remaining");
-					}
-				}
-			}
-        });
-        Button skipButton = (Button) findViewById(R.id.skip);
-        skipButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (questions.size() != 0) {
-					currentIndex = randomNumberGenerator.nextInt(questions.size());
-					textblock.setText(questions.get(currentIndex));
-				}
-			} 	
-        });
-        
-        if (questions.size() == 0) {
-        	skipButton.setClickable(false);
-        	completedButton.setClickable(false);
-        }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-    
-    public void createListOfQuestions() {
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.settings, menu);
+		return true;
+	}
+	
+	public void showListOfQuestions() {
+	    // TODO add a hashmap
+		
+		buttonsMap = new HashMap<Button, Integer>();
+		buttonToLayoutMap = new HashMap<Button, LinearLayout>();
+		int i = 0;
+	    for (String question : questions) {
+	    	LinearLayout questionLayout = new LinearLayout(this);
+	    	TextView questionView = new TextView(this);
+	    	questionView.setText(question);
+	    	questionButton = new Button(this);
+	    	buttonsMap.put(questionButton, Integer.valueOf(i));
+	    	buttonToLayoutMap.put(questionButton, questionLayout);
+	    	questionLayout.addView(questionView);
+	    	questionLayout.addView(questionButton);
+	    	defaultQuestionsList.addView(questionLayout);
+	    	i++;
+	    }
+	}
+	
+	public void createListOfQuestions() {
     	questions = new ArrayList<String>();
     	questions.add("What are your strengths?");
     	questions.add("What are your weaknesses?");
@@ -142,5 +119,5 @@ public class MainActivity extends Activity {
     	questions.add("What questions haven’t I asked you?");
     	questions.add("What questions do you have for me?");
     }
-    
+
 }
