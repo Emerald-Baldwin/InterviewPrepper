@@ -5,14 +5,21 @@ import java.util.Random;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.Chronometer.OnChronometerTickListener;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -22,8 +29,8 @@ public class MainActivity extends Activity {
 	TextView textblock;
 	Chronometer clock;
 	SharedPreferences sharedPref;
-	int tensMinute;
-	int onesMinute;
+	int interviewTime;
+	RelativeLayout interviewView;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +40,30 @@ public class MainActivity extends Activity {
         createListOfQuestions();
         
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        tensMinute = sharedPref.getInt("tens_minute", 0);
-        onesMinute = sharedPref.getInt("ones_minute", 0);
-        
+        //interviewTime = sharedPref.getInt("time", 1);
+        interviewTime = 1;
+        interviewView = (RelativeLayout) findViewById(R.id.interviewView);
         randomNumberGenerator = new Random();
         currentIndex = randomNumberGenerator.nextInt(questions.size());
         textblock = (TextView) findViewById(R.id.question);
         textblock.setText(questions.get(currentIndex));
         
         clock = (Chronometer) findViewById(R.id.timer);
+        clock.setText("00:00");
+        
+        clock.setOnChronometerTickListener(new OnChronometerTickListener() {
+			@Override
+			public void onChronometerTick(Chronometer arg0) {
+				long elapsedMilis = SystemClock.elapsedRealtime() - arg0.getBase();
+				Log.d("MILLIS", "Interview time: " + interviewTime);
+				Log.d("MILLIS", "Elapsed milis is " + elapsedMilis);
+				if (elapsedMilis > 6000 * interviewTime) {
+					flashBackground();
+				}
+				
+			}
+        	
+        });
         clock.start();
         
         System.out.println(clock.toString());
@@ -87,6 +109,25 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+    
+    @SuppressWarnings("deprecation")
+	public void flashBackground() {
+    	int delay = 100;
+    	ColorDrawable blueColor = new ColorDrawable(0xffff0000);
+    	
+    	final AnimationDrawable anim = new AnimationDrawable();
+    	Handler handler = new Handler();
+    	anim.addFrame(new ColorDrawable(Color.CYAN), 400);
+    	anim.addFrame(new ColorDrawable(Color.WHITE), 400);
+    	
+    	interviewView.setBackgroundDrawable(anim);
+    	handler.postDelayed(new Runnable() {
+    		@Override
+    		public void run() {
+    			anim.start();
+    		}
+    	}, 100);
     }
     
     public void createListOfQuestions() {

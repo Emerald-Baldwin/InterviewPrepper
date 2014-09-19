@@ -8,9 +8,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,6 +22,7 @@ public class SettingsActivity extends Activity {
 	Button questionButton;
 	HashMap<Button, Integer> buttonsMap;
 	HashMap<Button, LinearLayout> buttonToLayoutMap;
+	EditText lengthOfInterview;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,8 @@ public class SettingsActivity extends Activity {
 	    defaultQuestionsList = (LinearLayout) findViewById(R.id.defaultQuestionsList);
 	    
 	    showListOfQuestions();
+	    
+	    lengthOfInterview = (EditText) findViewById(R.id.editText1);
 	}
 
 	@Override
@@ -44,6 +46,15 @@ public class SettingsActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.settings, menu);
 		return true;
+	}
+	
+	@Override
+	public void onPause() {
+		if (lengthOfInterview.getText().length() > 0)
+			editor.putInt("time", Integer.parseInt(lengthOfInterview.getText().toString()));
+		
+		// TODO save inputted text for when they return
+		editor.apply();
 	}
 	
 	public void showListOfQuestions() {
